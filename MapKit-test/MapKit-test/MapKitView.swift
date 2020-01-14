@@ -12,17 +12,16 @@ import CoreLocation
 import Foundation
 
 @available(iOS 13.0, *)
-let locationObserver = LocationObserver()
-
-@available(iOS 13.0, *)
 struct MapKitView: View {
+    let locationObserver = LocationObserver()
+    
     var body: some View {
         VStack {
-            MapView(coordinate: CLLocationCoordinate2D(latitude: locationObserver.location.coordinate.latitude, longitude: locationObserver.location.coordinate.longitude))
+            MapView(coordinate: locationObserver.location.coordinate, title: "現在地")
             
             Spacer()
             
-            Text("緯度：\(locationObserver.location.coordinate.latitude), 経度：\(locationObserver.location.coordinate.longitude)")
+            Text("緯度：\(locationObserver.location.coordinate.latitude), 経度：\(locationObserver.location.coordinate.longitude)").bold()
             
             Spacer()
         }
@@ -32,7 +31,8 @@ struct MapKitView: View {
 struct MapView: UIViewRepresentable {
     typealias UIViewType = MKMapView
     
-    let coordinate: CLLocationCoordinate2D
+    var coordinate: CLLocationCoordinate2D
+    var title: String
     
     func makeUIView(context: Context) -> MKMapView {
         MKMapView(frame: .zero)
@@ -42,6 +42,11 @@ struct MapView: UIViewRepresentable {
         let span = MKCoordinateSpan(latitudeDelta: 2.0, longitudeDelta: 2.0)
         let region = MKCoordinateRegion(center: coordinate, span: span)
         uiView.setRegion(region, animated: true)
+        
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        annotation.title = title
+        uiView.addAnnotation(annotation)
     }
 }
 

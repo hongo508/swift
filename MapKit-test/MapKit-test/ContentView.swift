@@ -10,8 +10,18 @@ import SwiftUI
 
 @available(iOS 13.0, *)
 struct ContentView: View {
+    let locationObserver = LocationObserver()
+    
     var body: some View {
-        MapKitView()
+        VStack {
+            MapView(coordinate: locationObserver.location.coordinate, title: "現在地")
+            
+            Spacer()
+            
+            Text("緯度：\(locationObserver.location.coordinate.latitude), 経度：\(locationObserver.location.coordinate.longitude)").bold()
+            
+            Spacer()
+        }
     }
 }
 
