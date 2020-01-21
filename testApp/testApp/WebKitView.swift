@@ -11,11 +11,9 @@ import WebKit
 
 @available(iOS 13.0, *)
 struct WebKitView: View {
-    let webViewDelegate = WebViewDelegate()
-    
     var body: some View {
         VStack {
-            WebView(url: "https://www.google.com/")
+            WebView(url: "https://www.google.com")
         }
     }
 }
@@ -24,6 +22,7 @@ struct WebView: UIViewRepresentable {
     typealias UIViewType = WKWebView
     
     let url: String
+    let webViewDelegate = WebViewDelegate()
     
     func makeUIView(context: Context) -> WKWebView {
         WKWebView(frame: .zero)
@@ -33,36 +32,39 @@ struct WebView: UIViewRepresentable {
         let request = URLRequest(url: URL(string: url)!)
         uiView.load(request)
     }
-    
-    func back(uiView: WKWebView) {
-        uiView.goBack()
-    }
-    
-    func forward(uiView: WKWebView) {
-        uiView.goForward()
-    }
 }
 
-class WebViewDelegate: NSObject, WKUIDelegate, WKNavigationDelegate {
+class WebViewDelegate: NSObject, WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler {
     var webView: WKWebView!
     
+    let configuration = WKWebViewConfiguration()
+    let controller = WKUserContentController()
+    
     override init() {
-        webView = WKWebView()
         super.init()
+        controller.add(self, name: "callbackHandler")
+        configuration.userContentController = controller
+        webView = WKWebView(frame: .zero, configuration: configuration)
         webView.uiDelegate = self
         webView.navigationDelegate = self
     }
     
-    func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
-        WKWebView(frame: .zero)
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "callbackHandler" {
+            print("javascript: \(message.body)")
+        }
     }
     
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        print("bbb")
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        let execJs: String = "cosole.log(\"hello,world\")"
+        webView.evaluateJavaScript(execJs, completionHandler: {
+            (success, error) in
+        })
     }
     
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        print("ccc")
+    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        let cred = URLCredential.init(trust: challenge.protectionSpace.serverTrust!)
+        completionHandler(.useCredential, cred)
     }
 }
 
