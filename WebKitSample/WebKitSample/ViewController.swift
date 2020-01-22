@@ -9,6 +9,7 @@
 import UIKit
 import WebKit
 
+@available(iOS 9.0, *)
 class ViewController: UIViewController {
     var webView: WKWebView!
     let uiView = WebUIDelegate()
@@ -17,6 +18,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpWebView()
+        webView.allowsBackForwardNavigationGestures = true
+        webView.allowsLinkPreview = true
         load(str: "https://www.apple.com/")
     }
     
@@ -32,6 +35,14 @@ class ViewController: UIViewController {
         let url = URL(string: str)
         let request = URLRequest(url: url!)
         webView.load(request)
+    }
+    
+    @IBAction func back() {
+        webView.goBack()
+    }
+    
+    @IBAction func forward() {
+        webView.goForward()
     }
 }
 

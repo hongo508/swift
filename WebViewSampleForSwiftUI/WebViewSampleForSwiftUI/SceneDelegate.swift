@@ -1,8 +1,8 @@
 //
 //  SceneDelegate.swift
-//  WebView
+//  WebViewSampleForSwiftUI
 //
-//  Created by 本郷匠 on 2020/01/20.
+//  Created by 本郷匠 on 2020/01/22.
 //  Copyright © 2020 t.hongo. All rights reserved.
 //
 

@@ -1,15 +1,15 @@
 //
-//  WebViewTests.swift
-//  WebViewTests
+//  WebViewSampleForSwiftUITests.swift
+//  WebViewSampleForSwiftUITests
 //
-//  Created by 本郷匠 on 2020/01/20.
+//  Created by 本郷匠 on 2020/01/22.
 //  Copyright © 2020 t.hongo. All rights reserved.
 //
 
 import XCTest
-@testable import WebView
+@testable import WebViewSampleForSwiftUI
 
-class WebViewTests: XCTestCase {
+class WebViewSampleForSwiftUITests: XCTestCase {
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
